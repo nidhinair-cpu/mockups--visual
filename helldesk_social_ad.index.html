@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HELLDESK → HELPDESK — Social Ad</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: 'Outfit', sans-serif;
+  color: white;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.ad-label {
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* ===== AD CONTAINER (1:1 LinkedIn/Instagram) ===== */
+.ad {
+  width: 540px;
+  height: 540px;
+  background: #0D0D0D;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Noise */
+.ad::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Subtle grid */
+.ad-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(140,105,240,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140,105,240,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.5;
+}
+
+/* Glow behind text */
+.ad-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  background: radial-gradient(circle, rgba(140,105,240,0.1) 0%, transparent 70%);
+  transition: background 1.5s ease;
+  z-index: 1;
+}
+
+.ad.fixed .ad-glow {
+  background: radial-gradient(circle, rgba(0,155,0,0.12) 0%, transparent 70%);
+}
+
+/* Content */
+.ad-content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 3rem;
+}
+
+/* "Your" label */
+.ad-your {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #666;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+/* Main word */
+.word-container {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  height: 90px;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.letter {
+  font-size: 5.5rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -2px;
+  color: white;
+  display: inline-block;
+  position: relative;
+}
+
+/* The L that transforms */
+.letter-l {
+  color: #8C69F0;
+  position: relative;
+  display: inline-block;
+}
+
+.letter-l .char-l {
+  display: inline-block;
+}
+
+.letter-l .char-p {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  color: #009B00;
+}
+
+/* Phase 1: Glitch the L */
+.ad.glitching .letter-l .char-l {
+  animation: glitchLetter 0.6s ease forwards;
+}
+
+@keyframes glitchLetter {
+  0% { opacity: 1; transform: none; color: #8C69F0; }
+  10% { transform: translateX(3px) skewX(10deg); color: #ff0066; }
+  20% { transform: translateX(-3px) skewX(-15deg); color: #8C69F0; opacity: 0.7; }
+  30% { transform: translateX(2px) skewY(5deg); color: #ff0066; opacity: 1; }
+  40% { transform: translateX(-2px) skewX(20deg) scaleY(1.1); color: #8C69F0; opacity: 0.5; }
+  50% { transform: skewX(-25deg) scaleX(0.8); color: #ff0066; opacity: 0.8; }
+  60% { transform: translateX(3px) skewY(-10deg) scaleY(0.9); opacity: 0.3; }
+  70% { transform: translateX(-3px) skewX(15deg); opacity: 0.6; color: #8C69F0; }
+  80% { transform: skewX(-30deg) scaleX(0.5); opacity: 0.2; }
+  90% { transform: scaleY(0.3) scaleX(0.3); opacity: 0.1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+/* Phase 2: P appears */
+.ad.revealing .letter-l .char-p {
+  animation: revealP 0.5s ease forwards;
+}
+
+@keyframes revealP {
+  0% { opacity: 0; transform: scale(0.3) rotate(-10deg); filter: blur(4px); }
+  40% { opacity: 0.7; transform: scale(1.15) rotate(2deg); filter: blur(1px); }
+  70% { opacity: 1; transform: scale(0.95) rotate(-1deg); filter: blur(0); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(0); }
+}
+
+/* Screen flash on transform */
+.ad-flash {
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.ad.flash .ad-flash {
+  animation: screenFlash 0.15s ease;
+}
+
+@keyframes screenFlash {
+  0% { opacity: 0; }
+  50% { opacity: 0.08; }
+  100% { opacity: 0; }
+}
+
+/* Glitch artifacts — scan lines during glitch */
+.glitch-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.ad.glitching .glitch-lines {
+  animation: glitchLines 0.6s ease forwards;
+}
+
+@keyframes glitchLines {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.glitch-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(140,105,240,0.3);
+}
+
+/* Fixed by line */
+.fixed-by {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.5s ease;
+}
+
+.ad.fixed .fixed-by {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fixed-by-text {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #999;
+}
+
+.fixed-by-brand {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #009B00;
+}
+
+/* Bottom bar */
+.ad-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.2rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 5;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  opacity: 0;
+  transition: opacity 0.5s ease 0.3s;
+}
+
+.ad.fixed .ad-bottom { opacity: 1; }
+
+.ad-tagline {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.ad-cta {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #009B00;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Purple → Green color shift on all letters */
+.ad.fixed .letter {
+  transition: color 0.5s ease;
+}
+
+/* Replay button */
+.replay {
+  font-size: 0.85rem;
+  color: #666;
+  border: 1px solid #333;
+  background: transparent;
+  padding: 0.5rem 1.2rem;
+  border-radius: 100px;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.replay:hover {
+  color: white;
+  border-color: #666;
+}
+
+/* Small purple/green scanline artifacts */
+.artifact {
+  position: absolute;
+  height: 2px;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.ad.glitching .artifact {
+  animation: artifactFlash 0.6s ease forwards;
+}
+
+@keyframes artifactFlash {
+  0%, 100% { opacity: 0; }
+  20% { opacity: 0.6; }
+  40% { opacity: 0; }
+  50% { opacity: 0.8; }
+  70% { opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="ad-label">LinkedIn / Instagram — 1:1 Social Ad (click to play)</div>
+
+<div class="ad" id="ad" onclick="playAnimation()">
+  <div class="ad-grid"></div>
+  <div class="ad-glow"></div>
+  <div class="ad-flash"></div>
+  
+  <div class="glitch-lines">
+    <div class="glitch-line" style="top: 22%;"></div>
+    <div class="glitch-line" style="top: 38%;"></div>
+    <div class="glitch-line" style="top: 51%;"></div>
+    <div class="glitch-line" style="top: 67%;"></div>
+    <div class="glitch-line" style="top: 79%;"></div>
+  </div>
+
+  <!-- Purple/green artifacts -->
+  <div class="artifact" style="top: 42%; left: 15%; width: 70px; background: #8C69F0;"></div>
+  <div class="artifact" style="top: 55%; left: 55%; width: 90px; background: #ff0066;"></div>
+  <div class="artifact" style="top: 48%; left: 30%; width: 50px; background: #009B00;"></div>
+
+  <div class="ad-content">
+    <div class="ad-your">Your</div>
+    
+    <div class="word-container">
+      <span class="letter">H</span>
+      <span class="letter">E</span>
+      <span class="letter">L</span>
+      <span class="letter letter-l">
+        <span class="char-l">L</span>
+        <span class="char-p">P</span>
+      </span>
+      <span class="letter">D</span>
+      <span class="letter">E</span>
+      <span class="letter">S</span>
+      <span class="letter">K</span>
+    </div>
+
+    <div class="fixed-by">
+      <span class="fixed-by-text">Fixed by</span>
+      <span class="fixed-by-brand">Gladly AI.</span>
+    </div>
+  </div>
+
+  <div class="ad-bottom">
+    <span class="ad-tagline">Resolution-first AI for Salesforce</span>
+    <span class="ad-cta">Learn more →</span>
+  </div>
+</div>
+
+<button class="replay" onclick="resetAndPlay()">↻ Replay animation</button>
+
+<div class="ad-label" style="max-width: 500px; text-align: center; line-height: 1.6; color: #555;">
+  HELLDESK. The first L glitches, corrupts, and dissolves — then a green P snaps into place. HELPDESK. "Fixed by Gladly AI." The hell becomes help.
+</div>
+
+<script>
+const ad = document.getElementById('ad');
+let isPlaying = false;
+
+function playAnimation() {
+  if (isPlaying) return;
+  isPlaying = true;
+
+  // Reset
+  ad.className = 'ad';
+
+  // Pause, then start glitch
+  setTimeout(() => {
+    ad.classList.add('glitching');
+  }, 800);
+
+  // Flash + reveal P
+  setTimeout(() => {
+    ad.classList.add('flash');
+    ad.classList.add('revealing');
+  }, 1450);
+
+  // Fixed state
+  setTimeout(() => {
+    ad.classList.add('fixed');
+    isPlaying = false;
+  }, 1700);
+}
+
+function resetAndPlay() {
+  ad.className = 'ad';
+  isPlaying = false;
+  setTimeout(() => playAnimation(), 300);
+}
+
+// Auto-play on load
+setTimeout(() => playAnimation(), 500);
+</script>
+
+</body>
+</html>
